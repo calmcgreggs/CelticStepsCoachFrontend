@@ -20,15 +20,18 @@ export default function Home() {
   const [numberOfGuests, setNumberOfGuests] = useState(1);
 
   async function submitForm() {
-    const { data, error } = await supabase.from("Bookings").insert({
-      ContactName: name,
-      TourCompany: tourCompany,
-      ContactEmail: email,
-      Date: date,
-      Venue: venue,
-      NumberOfGuests: numberOfGuests,
-      Approved: false,
-    });
+    const { data, error } = await supabase
+      .from("Bookings")
+      .insert({
+        ContactName: name,
+        TourCompany: tourCompany,
+        ContactEmail: email,
+        Date: date,
+        Venue: venue,
+        NumberOfGuests: numberOfGuests,
+        Approved: false,
+      })
+      .select();
     if (error) {
       console.error("Error adding Booking:", error);
     } else {
@@ -107,7 +110,13 @@ export default function Home() {
             </span>
           </label>
           <input
-            value={date.toDateString()}
+            value={
+              date.getFullYear() +
+              "-" +
+              (date.getMonth() + 1).toString().padStart(2, "0") +
+              "-" +
+              date.getDate().toString().padStart(2, "0")
+            }
             onChange={(e) => setDate(new Date(e.target.value))}
             type="date"
             min={new Date().toISOString().split("T")[0]}
