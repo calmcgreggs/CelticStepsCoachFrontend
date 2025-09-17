@@ -2,6 +2,8 @@ import { supabase } from "@/lib/supabase";
 import { Geist, Geist_Mono } from "next/font/google";
 import { useState } from "react";
 
+// TODO: Validation of form fields, email response on submission
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
