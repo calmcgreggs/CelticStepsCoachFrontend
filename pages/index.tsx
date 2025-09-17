@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { Geist, Geist_Mono } from "next/font/google";
 import { useState } from "react";
 
-// TODO: Validation of form fields, email response on submission
+// TODO: Validation of form fields, email response on submission, validate if already made a booking for that date
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,8 +36,12 @@ export default function Home() {
       .select();
     if (error) {
       console.error("Error adding Booking:", error);
+      alert("There was an error submitting your booking. Please try again.");
     } else {
       console.log("Booking added successfully:", data);
+      alert(
+        "Booking submitted successfully! Please note that your booking is not confirmed until you receive a confirmation email."
+      );
     }
   }
 
