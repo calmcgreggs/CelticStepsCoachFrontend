@@ -1,5 +1,6 @@
-import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 import { Geist, Geist_Mono } from "next/font/google";
+import { useState } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,106 +11,156 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 export default function Home() {
+  const [name, setName] = useState("");
+  const [tourCompany, setTourCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [date, setDate] = useState<Date>(new Date());
+  const [venue, setVenue] = useState<"Killarney" | "Tralee">("Killarney");
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
+
+  async function submitForm() {
+    const { data, error } = await supabase.from("Bookings").insert({
+      ContactName: name,
+      TourCompany: tourCompany,
+      ContactEmail: email,
+      Date: date,
+      Venue: venue,
+      NumberOfGuests: numberOfGuests,
+      Approved: false,
+    });
+    if (error) {
+      console.error("Error adding Booking:", error);
+    } else {
+      console.log("Booking added successfully:", data);
+    }
+  }
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen">
+      <div
+        className="container mx-auto py-8 px-4 text-white text-center"
+        id="information"
+      >
+        <h1 className="text-4xl font-bold mb-4">
+          Welcome to the Celtic Steps Coach Bookings System
+        </h1>
+        <p className="w-full md:w-2/3 lg:w-1/2 mx-auto mb-8">
+          Use the below form to register interest for a coach booking for the
+          show. Please note that you will{" "}
+          <span className="underline">not have a valid booking</span> until you
+          have recieved a{" "}
+          <span className="font-bold">confirmation number via email</span>.
+        </p>
+      </div>
+      <div
+        id="userform"
+        className="py-8 px-4 text-white justify-items-center grid xl:grid-cols-2 gap-10 [&>*]:w-full "
+      >
+        <div id="Contact Name" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Contact Name
+            </span>
+          </label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            placeholder="Contact Name"
+            className="input input-bordered w-full max-w-xs"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div id="Tour Company" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Tour Company
+            </span>
+          </label>
+          <input
+            value={tourCompany}
+            onChange={(e) => setTourCompany(e.target.value)}
+            type="text"
+            placeholder="Tour Company"
+            className="input input-bordered w-full max-w-xs"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </div>
+        <div id="Contact Email" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Contact Email
+            </span>
+          </label>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Contact Email"
+            className="input input-bordered w-full max-w-xs"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+        </div>
+
+        <div id="Date" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Date
+            </span>
+          </label>
+          <input
+            value={date.toDateString()}
+            onChange={(e) => setDate(new Date(e.target.value))}
+            type="date"
+            min={new Date().toISOString().split("T")[0]}
+            max={new Date().getFullYear() + "-10-17"}
+            placeholder="Date"
+            className="input input-bordered w-full max-w-xs"
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+        <div id="Venue" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Venue
+            </span>
+          </label>
+          <select
+            value={venue}
+            onChange={(e) =>
+              setVenue(e.target.value == "Killarney" ? "Killarney" : "Tralee")
+            }
+            className="input input-bordered w-full max-w-xs"
+          >
+            <option value={"Killarney"}>
+              Celtic Steps the Show : Killarney
+            </option>
+            <option value={"Tralee"}>Celtic Steps the Show : Tralee</option>
+          </select>
+        </div>
+        <div id="Number of Guests" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Number of Guests
+            </span>
+          </label>
+          <input
+            value={numberOfGuests}
+            onChange={(e) =>
+              setNumberOfGuests(e.target.value as unknown as number)
+            }
+            type="number"
+            min="1"
+            placeholder="Number of Guests"
+            className="input input-bordered w-full max-w-xs"
+          />
+        </div>
+      </div>
+      <div>
+        <button
+          className="btn btn-success btn-wide mx-auto block"
+          onClick={submitForm}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }
