@@ -1,6 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import { Geist, Geist_Mono } from "next/font/google";
 import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 // TODO: Validation of form fields, email response on submission, validate if already made a booking for that date
 
@@ -20,6 +22,7 @@ export default function Home() {
   const [date, setDate] = useState<Date>(new Date());
   const [venue, setVenue] = useState<"Killarney" | "Tralee">("Killarney");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   async function submitForm() {
     const { data, error } = await supabase
@@ -32,6 +35,7 @@ export default function Home() {
         Venue: venue,
         NumberOfGuests: numberOfGuests,
         Approved: false,
+        PhoneNumber: phoneNumber,
       })
       .select();
     if (error) {
@@ -42,11 +46,22 @@ export default function Home() {
       alert(
         "Booking submitted successfully! Please note that your booking is not confirmed until you receive a confirmation email."
       );
+      setName("");
+      setTourCompany("");
+      setEmail("");
+      setDate(new Date());
+      setVenue("Killarney");
+      setNumberOfGuests(1);
+      setPhoneNumber("");
     }
   }
 
+  const isntSat = (date: Date) => {
+    return date.getDay() !== 6;
+  };
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20">
       <div
         className="container mx-auto py-8 px-4 text-white text-center"
         id="information"
@@ -69,14 +84,15 @@ export default function Home() {
         <div id="Contact Name" className="flex flex-col gap-2 items-center">
           <label className="label w-full">
             <span className="label-text text-white mx-auto font-bold">
-              Contact Name
+              Tour Leader Name
             </span>
           </label>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
-            placeholder="Contact Name"
+            placeholder="Tour Leader Name"
+            autoComplete="name"
             className="input input-bordered w-full max-w-xs"
           />
         </div>
@@ -108,6 +124,20 @@ export default function Home() {
             className="input input-bordered w-full max-w-xs"
           />
         </div>
+        <div id="Phone Number" className="flex flex-col gap-2 items-center">
+          <label className="label w-full">
+            <span className="label-text text-white mx-auto font-bold">
+              Phone Number (Including Country Code)
+            </span>
+          </label>
+          <input
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            type="text"
+            placeholder="Phone Number (Including Country Code)"
+            className="input input-bordered w-full max-w-xs"
+          />
+        </div>
 
         <div id="Date" className="flex flex-col gap-2 items-center">
           <label className="label w-full">
@@ -115,7 +145,7 @@ export default function Home() {
               Date
             </span>
           </label>
-          <input
+          {/* <input
             value={
               date.getFullYear() +
               "-" +
@@ -127,8 +157,29 @@ export default function Home() {
             type="date"
             min={new Date().toISOString().split("T")[0]}
             max={new Date().getFullYear() + "-10-17"}
+            
             placeholder="Date"
             className="input input-bordered w-full max-w-xs"
+          /> */}
+          <DatePicker
+            selected={new Date()}
+            value={
+              date.getFullYear() +
+              "-" +
+              (date.getMonth() + 1).toString().padStart(2, "0") +
+              "-" +
+              date.getDate().toString().padStart(2, "0")
+            }
+            onChange={(d: Date | null) => {
+              setDate(d || new Date());
+            }}
+            placeholderText="Select a date"
+            minDate={new Date()}
+            maxDate={new Date(new Date().getFullYear(), 9, 17)} // October is month 9 (0-indexed)
+            dateFormat="yyyy-MM-dd"
+            filterDate={isntSat}
+            className="input input-bordered max-w-xs w-100"
+            withPortal
           />
         </div>
         <div id="Venue" className="flex flex-col gap-2 items-center">
