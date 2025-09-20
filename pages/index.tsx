@@ -93,7 +93,7 @@ export default function Home() {
             type="text"
             placeholder="Tour Leader Name"
             autoComplete="name"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           />
         </div>
         <div id="Tour Company" className="flex flex-col gap-2 items-center">
@@ -107,7 +107,7 @@ export default function Home() {
             onChange={(e) => setTourCompany(e.target.value)}
             type="text"
             placeholder="Tour Company"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           />
         </div>
         <div id="Contact Email" className="flex flex-col gap-2 items-center">
@@ -121,7 +121,7 @@ export default function Home() {
             onChange={(e) => setEmail(e.target.value)}
             type="text"
             placeholder="Contact Email"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           />
         </div>
         <div id="Phone Number" className="flex flex-col gap-2 items-center">
@@ -135,7 +135,7 @@ export default function Home() {
             onChange={(e) => setPhoneNumber(e.target.value)}
             type="text"
             placeholder="Phone Number (Including Country Code)"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           />
         </div>
 
@@ -178,7 +178,7 @@ export default function Home() {
             maxDate={new Date(new Date().getFullYear(), 9, 17)} // October is month 9 (0-indexed)
             dateFormat="yyyy-MM-dd"
             filterDate={isntSat}
-            className="input input-bordered max-w-xs w-100"
+            className="input input-bordered max-w-xs w-100 bg-black"
             withPortal
           />
         </div>
@@ -193,7 +193,7 @@ export default function Home() {
             onChange={(e) =>
               setVenue(e.target.value == "Killarney" ? "Killarney" : "Tralee")
             }
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           >
             <option value={"Killarney"}>
               Celtic Steps the Show : Killarney
@@ -215,7 +215,7 @@ export default function Home() {
             type="number"
             min="1"
             placeholder="Number of Guests"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs bg-black"
           />
         </div>
       </div>
